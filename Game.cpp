@@ -248,7 +248,8 @@ void render(SDL_Renderer* renderer, Tank& tank, std::vector<EnemyTank>& enemies,
         if (tank.dirY == 1) angle = 180;  // Quay xuống
 
         SDL_Rect tankRect = { tank.x, tank.y, TANK_SIZE, TANK_SIZE };
-        SDL_RenderCopyEx(renderer, tank.texture, nullptr, &tankRect, angle, nullptr, SDL_FLIP_NONE);
+        SDL_Point center = { TANK_SIZE / 2, TANK_SIZE / 2 };  // Tâm xoay là chính giữa xe tăng
+        SDL_RenderCopyEx(renderer, tank.texture, nullptr, &tankRect, angle, &center, SDL_FLIP_NONE);
     }
 
     // Vẽ xe tăng địch
@@ -259,7 +260,8 @@ void render(SDL_Renderer* renderer, Tank& tank, std::vector<EnemyTank>& enemies,
             if (enemy.getDirX() == -1) angle = 90; // Quay trái
             if (enemy.getDirY() == -1) angle = 180;  // Quay xuống
             SDL_Rect enemyRect = { enemy.getX(), enemy.getY(), TANK_SIZE, TANK_SIZE};
-            SDL_RenderCopyEx(renderer, enemy.getTexture(), nullptr, &enemyRect, angle, nullptr, SDL_FLIP_NONE);
+            SDL_Point center = { TANK_SIZE / 2, TANK_SIZE / 2 };
+            SDL_RenderCopyEx(renderer, enemy.getTexture(), nullptr, &enemyRect, angle, &center,SDL_FLIP_NONE);
         }
     }
     for (auto& enemy : enemies) {

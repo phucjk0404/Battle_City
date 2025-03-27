@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
                 {
                     if (e.key.keysym.sym == SDLK_RETURN)
                     {
-                        game.setGameSate(PLAYING);
+                        level.setGameLevel(MEDIUM);
                     }
                     if (e.key.keysym.sym == SDLK_SPACE)
                     {
@@ -103,10 +103,10 @@ int main(int argc, char* argv[]) {
             }
             switch (level.getGameLevel())
             {
-            case EASY: gamelevel = 1; break;
-            case MEDIUM:gamelevel = 2; break;
-            case HARD:gamelevel = 3;  break;
-            case SUPER_HARD:gamelevel = 4; break;
+            case EASY: gamelevel = 1; game.setGameSate(PLAYING); break;
+            case MEDIUM:gamelevel = 2; game.setGameSate(PLAYING); break;
+            case HARD:gamelevel = 3; game.setGameSate(PLAYING);  break;
+            case SUPER_HARD:gamelevel = 4; game.setGameSate(PLAYING); break;
             }
             SDL_Color loadTextColor = { 255,255,255,255 };
             SDL_Texture* gameLoadeTexture1 = renderText("PRESS ENTER TO START PLAYING", "asset/win.ttf", loadTextColor, 18, renderer);

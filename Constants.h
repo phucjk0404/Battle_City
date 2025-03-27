@@ -4,7 +4,7 @@
 
 const int SCREEN_WIDTH = 520;
 const int SCREEN_HEIGHT = 520;
-const int TANK_SIZE = 40;
+const int TANK_SIZE = 30;
 const int BULLET_SIZE = 10;
 const int MAP_HEIGHT = 13;
 const int MAP_WIDTH = 13;

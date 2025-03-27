@@ -10,7 +10,7 @@
 class Tank {
 public: // Thêm public để các thành viên có thể truy cập
     int x, y;
-    int speed = 5;
+    int speed = 7;
     int dirX = 0, dirY = -1;
     std::vector<Bullet> bullets;
     bool isHidden = false;

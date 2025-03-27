@@ -22,7 +22,8 @@ enum LEVEL
     EASY,
     MEDIUM,
     HARD,
-    SUPER_HARD
+    SUPER_HARD,
+     NULL_GAME_LEVEL
 };
 
 class Game {
@@ -46,7 +47,7 @@ class GameLevel
 public:
     GameLevel()
     {
-        gamelevel = MEDIUM;
+        gamelevel = NULL_GAME_LEVEL;
     }
     LEVEL getGameLevel()
     {
