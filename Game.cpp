@@ -8,12 +8,13 @@
 #include <cstdlib> // Để sử dụng rand() và srand()
 #include <ctime>
 #include <string>
+#include <SDL_mixer.h>
 
 
 Game::Game() : gameState(MENU) {}
 
 
-void handleEvents(SDL_Event& e, bool& running, Tank& tank, SDL_Renderer* renderer,std::vector<EnemyTank> enemies) {
+void handleEvents(SDL_Event& e, bool& running, Tank& tank, SDL_Renderer* renderer,std::vector<EnemyTank> enemies,Game& game) {
     while (SDL_PollEvent(&e)) {
         if (e.type == SDL_QUIT) {
             running = false;
@@ -39,12 +40,29 @@ void handleEvents(SDL_Event& e, bool& running, Tank& tank, SDL_Renderer* rendere
                 tank.dirX = 0; tank.dirY = 1;
                 break;
             case SDLK_SPACE:
+                /*if (game.getGamesatus() != PAUSE_GAME)
+                {
+                    tank.bullets.push_back(Bullet(
+                        tank.x + TANK_SIZE / 2 - BULLET_SIZE / 2,
+                        tank.y + TANK_SIZE / 2 - BULLET_SIZE / 2,
+                        tank.dirX, tank.dirY, renderer
+                    ));
+                }
+                else {
+                    running = false;
+                }*/
                 tank.bullets.push_back(Bullet(
                     tank.x + TANK_SIZE / 2 - BULLET_SIZE / 2,
                     tank.y + TANK_SIZE / 2 - BULLET_SIZE / 2,
                     tank.dirX, tank.dirY, renderer
                 ));
                 break;
+            case SDLK_p:
+                if (game.getGamesatus() != PAUSE_GAME)
+                {
+                    game.setGameSate(PAUSE_GAME);
+                }
+                
             }
 
             if (!checkCollision(newX, newY) && !checkCollsionTank1(newX,newY,enemies)) {
@@ -62,7 +80,7 @@ void handleEvents(SDL_Event& e, bool& running, Tank& tank, SDL_Renderer* rendere
 }
 
 
-void update(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>& explosions, SDL_Texture* explosionTexture1, SDL_Texture* explosionTexture2, SDL_Texture* explosionTexture3,Game& game, std::vector<std::pair<int, int>> indexOfZero,SDL_Renderer* renderer,int& score, const int& gameLevel) {
+void update(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>& explosions, SDL_Texture* explosionTexture1, SDL_Texture* explosionTexture2, SDL_Texture* explosionTexture3,Game& game, std::vector<std::pair<int, int>> indexOfZero,SDL_Renderer* renderer,int& score, const int& gameLevel, Mix_Chunk* explosionSound) {
     
     // Cập nhật vị trí đạn của người chơi
     for (auto& bullet : tank.bullets) {
@@ -99,6 +117,7 @@ void update(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>&
                 explosion.duration = 0;
                 explosion.finished = false;
                 explosions.push_back(explosion); // explosions là một tham số truyền vào
+				Mix_PlayChannel(-1, explosionSound, 0);
                 enemy.setIsHidden(true);
                 score++;
                 return true; // Xóa viên đạn
@@ -325,6 +344,9 @@ void render(SDL_Renderer* renderer, Tank& tank, std::vector<EnemyTank>& enemies,
         SDL_RenderCopy(renderer, gameLoadeTexture1, NULL, &LRect1);
         SDL_RenderCopy(renderer, gameLoadeTexture2, NULL, &LRect2);
         SDL_DestroyTexture(gameOverTexture);
+		SDL_DestroyTexture(gameLoadeTexture1);
+        SDL_DestroyTexture(gameLoadeTexture2);;
+		SDL_DestroyTexture(gameOverIMG);
     }
     if (game.getGamesatus() == PLAYING)
     {
@@ -339,6 +361,19 @@ void render(SDL_Renderer* renderer, Tank& tank, std::vector<EnemyTank>& enemies,
         renderTextScore("1 - DESTROY  MOST  ENEMY  TANKS", "asset/win.ttf", SCREEN_WIDTH + 20, 418, renderer,12);
         renderTextScore("2 - BASE  PROTECTION", "asset/win.ttf", SCREEN_WIDTH + 20, 436, renderer,12);
         SDL_RenderFillRect(renderer, &divider);
+    }
+    if (game.getGamesatus() == PAUSE_GAME)
+    {
+		SDL_Texture* pauseIMG = loadTexture("asset/pausegame.jpg", renderer);
+        SDL_Color textColor = { 255,255,255,255 };
+		std::string TextPause = "PRESS P TO CONTINUE PLAYING                     PRESS SPACE TO QUIT THE GAME";
+		SDL_Texture* pauseTexture = renderText(TextPause, "asset/win.ttf", textColor, 18, renderer);
+		int textWidth, textHeight;
+		SDL_QueryTexture(pauseTexture, NULL, NULL, &textWidth, &textHeight);
+		SDL_Rect textRect = { (TOTAL_SCREEN_WIDTH - textWidth) / 2, 400, textWidth, textHeight };
+        SDL_RenderCopy(renderer, pauseIMG, NULL, NULL);
+        SDL_RenderCopy(renderer, pauseTexture, NULL, &textRect);
+		SDL_DestroyTexture(pauseIMG);
     }
     SDL_RenderPresent(renderer);
 }

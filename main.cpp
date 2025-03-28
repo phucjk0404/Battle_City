@@ -53,8 +53,9 @@ int main(int argc, char* argv[]) {
     }
     Game game;
     GameLevel level;
-    int gamelevel;
+    int gamelevel; 
     Mix_Music* backgroundMusic = Mix_LoadMUS("asset/background.mp3"); // Thay "background.mp3" bằng đường dẫn đến file nhạc của bạn
+	Mix_Chunk* explosionSound = Mix_LoadWAV("asset/explosion.wav");
     if (!backgroundMusic) {
         std::cout << "Khong the tai nhac nen: " << Mix_GetError() << std::endl;
         return 1;
@@ -141,9 +142,32 @@ int main(int argc, char* argv[]) {
             SDL_Delay(16);
         }
         else {
-            handleEvents(e, running, tank, renderer, enemies);
+
             if (game.getGamesatus() == PLAYING) {
-                update(tank, enemies, explosions, explosionTexture1, explosionTexture2, explosionTexture3, game, indexOfZero, renderer, score,gamelevel);
+                handleEvents(e, running, tank, renderer, enemies, game);
+                update(tank, enemies, explosions, explosionTexture1, explosionTexture2, explosionTexture3, game, indexOfZero, renderer, score,gamelevel,explosionSound);
+            }
+            if (game.getGamesatus() == PAUSE_GAME)
+            {
+                render(renderer, tank, enemies, explosions, game, running, score, hightScore);
+                while (SDL_PollEvent(&e))
+                {
+                    if (e.type == SDL_QUIT)
+                    {
+                        running = false;
+                    }
+                    else if (e.type == SDL_KEYDOWN)
+                    {
+                        if (e.key.keysym.sym == SDLK_p)
+                        {
+							game.setGameSate(PLAYING);
+                        }
+                        else if (e.key.keysym.sym == SDLK_SPACE)
+                        {
+                            running = false;
+                        }
+                    }
+                }
             }
             render(renderer, tank, enemies, explosions, game, running, score,hightScore); // explosions them
             if (game.getGamesatus() == GAME_OVER)
