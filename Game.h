@@ -41,7 +41,7 @@ public:
         return gameState;
     }
 private:
-    GameState gameState; // Khai báo biến gameState là thành viên của class Game
+    GameState gameState; 
 };
 
 

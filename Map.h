@@ -8,7 +8,7 @@
 #include <vector>
 #include "EnemyTank.h"
 
-extern int map[MAP_HEIGHT][MAP_WIDTH]; // Khai báo biến global
+extern int map[MAP_HEIGHT][MAP_WIDTH]; 
 extern int oldMap[MAP_HEIGHT][MAP_WIDTH];
 void renderMap(SDL_Renderer* renderer);
 void resetMap();

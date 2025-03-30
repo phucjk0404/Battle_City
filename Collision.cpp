@@ -2,6 +2,7 @@
 #include "EnemyTank.h"
 #include <vector>
 
+// Kiểm tra va chạm với bản đồ
 bool checkCollision(int x, int y) {
     int tileX1 = x / TILE_SIZE;
     int tileY1 = y / TILE_SIZE;
@@ -32,6 +33,7 @@ bool checkCollision(int x, int y) {
         map[tileY4][tileX4] == 1 || map[tileY4][tileX4] == 2 || map[tileY4][tileX4] == 3);
 }
 
+// Kiểm tra va chạm giữa các xe tăng địch
 bool checkCollsionTank(int x, int y, EnemyTank* current, const std::vector<EnemyTank>& enemies) {
     SDL_Rect newRect = { x, y, TANK_SIZE, TANK_SIZE };
 
@@ -45,6 +47,8 @@ bool checkCollsionTank(int x, int y, EnemyTank* current, const std::vector<Enemy
     }
     return false;
 }
+
+// Kiểm tra va chạm giữa xe tăng người chơi và các xe tăng địch
 bool checkCollsionTank1(int x, int y, const std::vector<EnemyTank>& enemies)
 {
     SDL_Rect newRect = { x, y, TANK_SIZE, TANK_SIZE };

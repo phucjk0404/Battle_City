@@ -137,7 +137,6 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="Tank.cpp" />
     <ClCompile Include="texture_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -161,6 +160,7 @@
     <Image Include="asset\explosion3.png" />
     <Image Include="asset\gameover.jpg" />
     <Image Include="asset\menu.jpg" />
+    <Image Include="asset\pausegame.jpg" />
     <Image Include="asset\steel.png" />
     <Image Include="asset\tank.png" />
   </ItemGroup>
@@ -171,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <Media Include="asset\background.mp3" />
+    <Media Include="asset\explosion.wav" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="asset\highscore.txt" />

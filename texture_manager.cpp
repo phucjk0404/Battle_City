@@ -4,9 +4,11 @@
 
 
 
-SDL_Texture* brickTexture = nullptr; // Định nghĩa biến toàn cục
-SDL_Texture* steelTexture = nullptr; // Định nghĩa biến toàn cục
+SDL_Texture* brickTexture = nullptr; 
+SDL_Texture* steelTexture = nullptr; 
 SDL_Texture* baseTexture = nullptr;
+
+// Hàm tải ảnh từ đường dẫn path và trả về texture
 SDL_Texture* loadTexture(const char* path, SDL_Renderer* renderer) {
     SDL_Surface* surface = IMG_Load(path);
     if (!surface) {
@@ -24,6 +26,7 @@ SDL_Texture* loadTexture(const char* path, SDL_Renderer* renderer) {
     return texture;
 }
 
+// Hàm tải font chữ từ đường dẫn fontPath và trả về texture
 SDL_Texture* renderText(const std::string& message, const std::string fontPath, SDL_Color color, int fontSize, SDL_Renderer* renderer)
 {
     TTF_Font* font = TTF_OpenFont(fontPath.c_str(), fontSize);
@@ -52,7 +55,7 @@ SDL_Texture* renderText(const std::string& message, const std::string fontPath, 
     return texture;
 
 }
-
+// hàm render text score
 void renderTextScore(const std::string& text, const std::string fontPath, int x, int y,SDL_Renderer* renderer,int texsize)
 {
     TTF_Font* font = TTF_OpenFont(fontPath.c_str(), texsize);
@@ -82,5 +85,6 @@ void renderTextScore(const std::string& text, const std::string fontPath, int x,
     SDL_Rect drect = { x,y,loadedSurface->w,loadedSurface->h };
     SDL_RenderCopy(renderer, ScoreTexure, NULL, &drect);
     SDL_FreeSurface(loadedSurface);
+    SDL_DestroyTexture(ScoreTexure);
     TTF_CloseFont(font);
 }

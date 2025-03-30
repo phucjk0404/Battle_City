@@ -1,4 +1,4 @@
-// src/enemy_tank.cpp
+﻿// src/enemy_tank.cpp
 #include "EnemyTank.h"
 #include "Collision.h"
 #include <stdlib.h>
@@ -8,7 +8,7 @@ EnemyTank::EnemyTank(int startX, int startY, SDL_Renderer* renderer) : renderer(
     y = startY;
 }
 
-
+// Di chuyển xe tăng địch
 void EnemyTank::moveRandomly() {
     int newX = x + dirX * speed;
     int newY = y + dirY * speed;
@@ -27,7 +27,7 @@ void EnemyTank::moveRandomly() {
     isHidden = (map[y / TILE_SIZE][x / TILE_SIZE] == 3);
 }
 
-
+// Bắn đạn
 void EnemyTank::shoot() {
     bullets.push_back(Bullet(x + TANK_SIZE / 2 - BULLET_SIZE / 2,
         y + TANK_SIZE / 2 - BULLET_SIZE / 2,

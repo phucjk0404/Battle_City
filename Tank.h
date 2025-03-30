@@ -8,7 +8,7 @@
 #include "constants.h"
 
 class Tank {
-public: // Thêm public để các thành viên có thể truy cập
+public: 
     int x, y;
     int speed = 7;
     int dirX = 0, dirY = -1;

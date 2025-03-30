@@ -30,9 +30,7 @@ int main(int argc, char* argv[]) {
     int score = 0;
     Tank tank = { 6 * 40, 10 * 40 };
     tank.texture = loadTexture("asset/tank.png", renderer);
-    /*for (auto& enemy : enemies) {
-        enemy.setTexture(loadTexture("asset/etank.png", renderer));
-    }*/
+  
     brickTexture = loadTexture("asset/brick.png", renderer);
     steelTexture = loadTexture("asset/steel.png", renderer);
     baseTexture = loadTexture("asset/base.png", renderer);
@@ -46,7 +44,6 @@ int main(int argc, char* argv[]) {
     for (int y = 0; y < MAP_HEIGHT; ++y) {
         for (int x = 0; x < MAP_WIDTH; ++x) {
             if (map[y][x] == 0 && (y != 10 && x !=6)) {
-                // Thêm tọa độ (x, y) vào vector indexOfZero
                 indexOfZero.push_back({ x, y });
             }
         }
@@ -54,7 +51,7 @@ int main(int argc, char* argv[]) {
     Game game;
     GameLevel level;
     int gamelevel; 
-    Mix_Music* backgroundMusic = Mix_LoadMUS("asset/background.mp3"); // Thay "background.mp3" bằng đường dẫn đến file nhạc của bạn
+    Mix_Music* backgroundMusic = Mix_LoadMUS("asset/background.mp3"); 
 	Mix_Chunk* explosionSound = Mix_LoadWAV("asset/explosion.wav");
     if (!backgroundMusic) {
         std::cout << "Khong the tai nhac nen: " << Mix_GetError() << std::endl;
@@ -181,16 +178,16 @@ int main(int argc, char* argv[]) {
                     }
                     else if (e.type == SDL_KEYDOWN)
                     {
-                        if (e.key.keysym.sym == SDLK_RETURN) // Nhấn Enter để chơi lại
+                        if (e.key.keysym.sym == SDLK_RETURN) 
                         {
                             SDL_RenderClear(renderer);
                             resetMap();
                             renderMap(renderer);
                             resetGame(tank, enemies, explosions, score, renderer);
                             render(renderer, tank, enemies, explosions, game, running, score,hightScore);
-                            game.setGameSate(PLAYING); // Chỉnh sửa hàm setGameState
+                            game.setGameSate(PLAYING); 
                         }
-                        else if (e.key.keysym.sym == SDLK_SPACE) // Nhấn ESC để thoát
+                        else if (e.key.keysym.sym == SDLK_SPACE) 
                         {
                             running = false;
                         }

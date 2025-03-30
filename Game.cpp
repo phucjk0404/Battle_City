@@ -13,7 +13,7 @@
 
 Game::Game() : gameState(MENU) {}
 
-
+// Hàm di chuyển xe tăng
 void handleEvents(SDL_Event& e, bool& running, Tank& tank, SDL_Renderer* renderer,std::vector<EnemyTank> enemies,Game& game) {
     while (SDL_PollEvent(&e)) {
         if (e.type == SDL_QUIT) {
@@ -40,17 +40,6 @@ void handleEvents(SDL_Event& e, bool& running, Tank& tank, SDL_Renderer* rendere
                 tank.dirX = 0; tank.dirY = 1;
                 break;
             case SDLK_SPACE:
-                /*if (game.getGamesatus() != PAUSE_GAME)
-                {
-                    tank.bullets.push_back(Bullet(
-                        tank.x + TANK_SIZE / 2 - BULLET_SIZE / 2,
-                        tank.y + TANK_SIZE / 2 - BULLET_SIZE / 2,
-                        tank.dirX, tank.dirY, renderer
-                    ));
-                }
-                else {
-                    running = false;
-                }*/
                 tank.bullets.push_back(Bullet(
                     tank.x + TANK_SIZE / 2 - BULLET_SIZE / 2,
                     tank.y + TANK_SIZE / 2 - BULLET_SIZE / 2,
@@ -79,7 +68,7 @@ void handleEvents(SDL_Event& e, bool& running, Tank& tank, SDL_Renderer* rendere
     }
 }
 
-
+// Hàm cập nhật trạng thái của game
 void update(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>& explosions, SDL_Texture* explosionTexture1, SDL_Texture* explosionTexture2, SDL_Texture* explosionTexture3,Game& game, std::vector<std::pair<int, int>> indexOfZero,SDL_Renderer* renderer,int& score, const int& gameLevel, Mix_Chunk* explosionSound) {
     
     // Cập nhật vị trí đạn của người chơi
@@ -253,11 +242,13 @@ void update(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>&
 
 
 
-
+// Hàm vẽ chính
 void render(SDL_Renderer* renderer, Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>& explosions,Game& game, bool& run,const int& score, int hightscore) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
+	// Vẽ map
     renderMap(renderer);
+	// Vẽ xe tăng người chơi
     tank.texture = loadTexture("asset/tank.png", renderer);
     if (!tank.isHidden) {
 
@@ -292,12 +283,6 @@ void render(SDL_Renderer* renderer, Tank& tank, std::vector<EnemyTank>& enemies,
             SDL_Rect bulletRect = { bullet.x, bullet.y, BULLET_SIZE, BULLET_SIZE };
             SDL_RenderCopy(renderer, bullet.texture, nullptr, &bulletRect);
         }
-        else {
-            // Vẽ hình chữ nhật nếu không có texture
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-            SDL_Rect bulletRect = { bullet.x, bullet.y, BULLET_SIZE, BULLET_SIZE };
-            SDL_RenderFillRect(renderer, &bulletRect);
-        }
     }
 
     // Vẽ đạn của địch
@@ -314,10 +299,12 @@ void render(SDL_Renderer* renderer, Tank& tank, std::vector<EnemyTank>& enemies,
             }
         }
     }
+	// Vẽ vụ nổ
     for (auto& explosion : explosions) {
         SDL_Rect destRect = { explosion.x, explosion.y, TANK_SIZE, TANK_SIZE };
         SDL_RenderCopy(renderer, explosion.textures[explosion.currentTextureIndex], nullptr, &destRect);
     }
+	// Vẽ man hinh game over
     if (game.getGamesatus() == GAME_OVER)
     {
         SDL_Texture* gameOverIMG = loadTexture("asset/gameover.jpg", renderer);
@@ -348,6 +335,7 @@ void render(SDL_Renderer* renderer, Tank& tank, std::vector<EnemyTank>& enemies,
         SDL_DestroyTexture(gameLoadeTexture2);;
 		SDL_DestroyTexture(gameOverIMG);
     }
+    // Vẽ màn hình chơi chính
     if (game.getGamesatus() == PLAYING)
     {
         getHighScore(hightscore);
@@ -357,11 +345,15 @@ void render(SDL_Renderer* renderer, Tank& tank, std::vector<EnemyTank>& enemies,
         std::string highestScore = "HIGHEST SCORE : " + std::to_string(hightscore);
         renderTextScore(gameScore, "asset/win.ttf", SCREEN_WIDTH + 20, 50, renderer,30); 
         renderTextScore(highestScore, "asset/win.ttf", SCREEN_WIDTH + 20, 100, renderer, 18);
+        renderTextScore("HOW TO PLAY : ", "asset/win.ttf", SCREEN_WIDTH + 20, 200, renderer, 28);
+		renderTextScore("USE ARROW KEYS TO MOVE", "asset/win.ttf", SCREEN_WIDTH + 20, 230, renderer, 12);
+		renderTextScore("PRESS SPACE TO SHOOT", "asset/win.ttf", SCREEN_WIDTH + 20, 248, renderer, 12);
         renderTextScore("GAME RULES : " , "asset/win.ttf", SCREEN_WIDTH + 20,388, renderer,28);
         renderTextScore("1 - DESTROY  MOST  ENEMY  TANKS", "asset/win.ttf", SCREEN_WIDTH + 20, 418, renderer,12);
         renderTextScore("2 - BASE  PROTECTION", "asset/win.ttf", SCREEN_WIDTH + 20, 436, renderer,12);
         SDL_RenderFillRect(renderer, &divider);
     }
+    // Vẽ màn hình pause game
     if (game.getGamesatus() == PAUSE_GAME)
     {
 		SDL_Texture* pauseIMG = loadTexture("asset/pausegame.jpg", renderer);
@@ -378,6 +370,7 @@ void render(SDL_Renderer* renderer, Tank& tank, std::vector<EnemyTank>& enemies,
     SDL_RenderPresent(renderer);
 }
 
+// Hàm reset lại game
 void resetGame(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>& explosions, int& score,SDL_Renderer* renderer) {
     enemies.clear(); // Xóa toàn bộ xe tăng địch
     explosions.clear();
@@ -390,6 +383,7 @@ void resetGame(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosio
     score = 0; // Reset điểm số
 }
 
+// Hàm lấy điểm cao nhất
 void getHighScore(int& hightScore)
 {
     std::ifstream file("highscore.txt");
@@ -400,6 +394,7 @@ void getHighScore(int& hightScore)
     }
 }
 
+// Hàm so sánh điểm số và điểm cao nhất
 void setHighScore(int& score,int& hightScore)
 {
     if (score > hightScore)

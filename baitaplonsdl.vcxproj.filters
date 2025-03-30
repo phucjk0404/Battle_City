@@ -21,9 +21,6 @@
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Tank.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EnemyTank.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -103,6 +100,9 @@
     <Image Include="asset\gameover.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="asset\pausegame.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="asset\gameover.ttf" />
@@ -111,6 +111,9 @@
   </ItemGroup>
   <ItemGroup>
     <Media Include="asset\background.mp3" />
+    <Media Include="asset\explosion.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
   <ItemGroup>
     <Text Include="asset\highscore.txt" />
