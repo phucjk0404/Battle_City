@@ -159,6 +159,7 @@
     <Image Include="asset\explosion2.png" />
     <Image Include="asset\explosion3.png" />
     <Image Include="asset\gameover.jpg" />
+    <Image Include="asset\heart.png" />
     <Image Include="asset\menu.jpg" />
     <Image Include="asset\pausegame.jpg" />
     <Image Include="asset\steel.png" />
@@ -172,6 +173,7 @@
   <ItemGroup>
     <Media Include="asset\background.mp3" />
     <Media Include="asset\explosion.wav" />
+    <Media Include="asset\goverSound.wav" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="asset\highscore.txt" />

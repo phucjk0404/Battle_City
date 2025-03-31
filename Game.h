@@ -67,7 +67,7 @@ private:
 
 
 void handleEvents(SDL_Event& e, bool& running, Tank& tank, SDL_Renderer* renderer,std::vector<EnemyTank> enemies,Game& game);
-void update(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>& explosions, SDL_Texture* explosionTexture1, SDL_Texture* explosionTexture2, SDL_Texture* explosionTexture3, Game& game, std::vector<std::pair<int, int>> indexOfZero, SDL_Renderer* renderer, int& score, const int& gamelevel, Mix_Chunk* explosionSound);
+void update(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>& explosions, SDL_Texture* explosionTexture1, SDL_Texture* explosionTexture2, SDL_Texture* explosionTexture3, Game& game, std::vector<std::pair<int, int>> indexOfZero, SDL_Renderer* renderer, int& score, const int& gamelevel, Mix_Chunk* explosionSound, Mix_Chunk* goverSound);
 void render(SDL_Renderer* renderer, Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>& explosions, Game& game, bool& run, const int& score,int highscore);
 void resetGame(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>& explosions, int& score,SDL_Renderer* renderer);
 void getHighScore(int& hightScore);

@@ -15,7 +15,7 @@
 class EnemyTank {
 private:
     int x, y;
-    int speed = 2;
+    int speed = 4;
     int dirX = 0, dirY = -1;
     std::vector<Bullet> bullets;
     bool isHidden = false;

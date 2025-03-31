@@ -53,6 +53,7 @@ int main(int argc, char* argv[]) {
     int gamelevel; 
     Mix_Music* backgroundMusic = Mix_LoadMUS("asset/background.mp3"); 
 	Mix_Chunk* explosionSound = Mix_LoadWAV("asset/explosion.wav");
+	Mix_Chunk* goverSound = Mix_LoadWAV("asset/goverSound.wav");
     if (!backgroundMusic) {
         std::cout << "Khong the tai nhac nen: " << Mix_GetError() << std::endl;
         return 1;
@@ -142,7 +143,7 @@ int main(int argc, char* argv[]) {
 
             if (game.getGamesatus() == PLAYING) {
                 handleEvents(e, running, tank, renderer, enemies, game);
-                update(tank, enemies, explosions, explosionTexture1, explosionTexture2, explosionTexture3, game, indexOfZero, renderer, score,gamelevel,explosionSound);
+                update(tank, enemies, explosions, explosionTexture1, explosionTexture2, explosionTexture3, game, indexOfZero, renderer, score,gamelevel,explosionSound,goverSound);
             }
             if (game.getGamesatus() == PAUSE_GAME)
             {

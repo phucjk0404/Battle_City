@@ -69,7 +69,7 @@ void handleEvents(SDL_Event& e, bool& running, Tank& tank, SDL_Renderer* rendere
 }
 
 // Hàm cập nhật trạng thái của game
-void update(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>& explosions, SDL_Texture* explosionTexture1, SDL_Texture* explosionTexture2, SDL_Texture* explosionTexture3,Game& game, std::vector<std::pair<int, int>> indexOfZero,SDL_Renderer* renderer,int& score, const int& gameLevel, Mix_Chunk* explosionSound) {
+void update(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>& explosions, SDL_Texture* explosionTexture1, SDL_Texture* explosionTexture2, SDL_Texture* explosionTexture3,Game& game, std::vector<std::pair<int, int>> indexOfZero,SDL_Renderer* renderer,int& score, const int& gameLevel, Mix_Chunk* explosionSound, Mix_Chunk* goverSound) {
     
     // Cập nhật vị trí đạn của người chơi
     for (auto& bullet : tank.bullets) {
@@ -116,18 +116,42 @@ void update(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>&
         }), tank.bullets.end());
 
     // Kiểm tra va chạm với đạn địch
+
+    Uint32 currentTime = SDL_GetTicks();
     for (auto& enemy : enemies) {
-        for (auto& bullet : enemy.getBullets()) {
-            if (!tank.isHidden && bullet.x >= tank.x && bullet.x <= tank.x + TANK_SIZE &&
-                bullet.y >= tank.y && bullet.y <= tank.y + TANK_SIZE) {
-                // Xe tăng người chơi bị trúng đạn -> ẩn xe tăng
-                game.setGameSate(GAME_OVER);
-                tank.isHidden = true;
-                return; // Dừng cập nhật khi xe tăng bị trúng đạn
+        for (auto it = enemy.getBullets().begin(); it != enemy.getBullets().end();) {
+            if (!tank.isHidden &&
+                currentTime > tank.invincibleTime && // Kiểm tra miễn thương
+                it->x >= tank.x && it->x <= tank.x + TANK_SIZE &&
+                it->y >= tank.y && it->y <= tank.y + TANK_SIZE) {
+
+                // Giảm mạng
+                tank.lives--;
+
+                // Bật chế độ miễn thương trong 2 giây
+                tank.invincibleTime = currentTime + 2000;
+                tank.isBlinking = true; // Kích hoạt nhấp nháy
+
+                // Xóa viên đạn sau khi trúng
+                it = enemy.getBullets().erase(it);
+
+                std::cout << "Mạng còn lại: " << tank.lives << std::endl;
+
+                if (tank.lives == 0) {
+                    Mix_PlayChannel(-1, explosionSound, 0);
+                    Mix_PlayChannel(-1, goverSound, 0);
+                    game.setGameSate(GAME_OVER);
+                    tank.isHidden = true;
+                    return;
+                }
+            }
+            else {
+                ++it;
             }
         }
     }
 
+    
     // Xóa các xe tăng địch bị ẩn (bị bắn trúng) khỏi danh sách
     enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](EnemyTank& enemy) {
         return enemy.getHidden();
@@ -182,7 +206,7 @@ void update(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>&
             }
         }
 
-        if (rand() % 100 < 3) { // 3% cơ hội bắn đạn mỗi frame
+        if (rand() % 100 < 5) { // 3% cơ hội bắn đạn mỗi frame
             enemy.shoot();
         }
     }
@@ -250,17 +274,30 @@ void render(SDL_Renderer* renderer, Tank& tank, std::vector<EnemyTank>& enemies,
     renderMap(renderer);
 	// Vẽ xe tăng người chơi
     tank.texture = loadTexture("asset/tank.png", renderer);
-    if (!tank.isHidden) {
+	Uint32 currentTime = SDL_GetTicks();
 
+    if (currentTime > tank.invincibleTime) {
+        tank.isBlinking = false;
+    }
+
+    // Kiểm tra có cần render hay không (hiệu ứng nhấp nháy)
+    bool renderTank = true;
+    if (tank.isBlinking) {
+        renderTank = (currentTime / 200) % 2;  // Nhấp nháy mỗi 200ms
+    }
+
+    if (!tank.isHidden && renderTank) {
         double angle = 0;
-        if (tank.dirX == 1) angle = 90;   // Quay phải
-        if (tank.dirX == -1) angle = -90; // Quay trái
-        if (tank.dirY == 1) angle = 180;  // Quay xuống
+        if (tank.dirX == 1) angle = 90;    // Quay phải
+        if (tank.dirX == -1) angle = -90;  // Quay trái
+        if (tank.dirY == 1) angle = 180;   // Quay xuống
 
         SDL_Rect tankRect = { tank.x, tank.y, TANK_SIZE, TANK_SIZE };
         SDL_Point center = { TANK_SIZE / 2, TANK_SIZE / 2 };  // Tâm xoay là chính giữa xe tăng
+
         SDL_RenderCopyEx(renderer, tank.texture, nullptr, &tankRect, angle, &center, SDL_FLIP_NONE);
     }
+
 
     // Vẽ xe tăng địch
     for (auto& enemy : enemies) {
@@ -352,6 +389,15 @@ void render(SDL_Renderer* renderer, Tank& tank, std::vector<EnemyTank>& enemies,
         renderTextScore("1 - DESTROY  MOST  ENEMY  TANKS", "asset/win.ttf", SCREEN_WIDTH + 20, 418, renderer,12);
         renderTextScore("2 - BASE  PROTECTION", "asset/win.ttf", SCREEN_WIDTH + 20, 436, renderer,12);
         SDL_RenderFillRect(renderer, &divider);
+        const int HEART_SIZE = 30;  // Kích thước mỗi trái tim
+        const int START_X = SCREEN_WIDTH + 20;     // Vị trí bắt đầu vẽ (góc trên trái)
+        const int START_Y = 130;
+        SDL_Texture* heartTexture = loadTexture("asset/heart.png", renderer);
+        for (int i = 0; i < tank.lives; i++) {
+            SDL_Rect heartRect = { START_X + i * (HEART_SIZE + 5), START_Y, HEART_SIZE, HEART_SIZE };
+            SDL_RenderCopy(renderer, heartTexture, nullptr, &heartRect);
+        }
+        SDL_DestroyTexture(heartTexture);
     }
     // Vẽ màn hình pause game
     if (game.getGamesatus() == PAUSE_GAME)
