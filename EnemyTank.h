@@ -50,6 +50,7 @@ public:
     void setDirX(int newDirX) { dirX = newDirX; }
     void setDirY(int newDirY) { dirY = newDirY; }
     void setTexture(SDL_Texture* newTexture) { texture = newTexture; }
+	void setSpeed(int newSpeed) { speed = newSpeed; }
 };
 
 extern std::vector<EnemyTank> enemies;

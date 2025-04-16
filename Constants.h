@@ -11,5 +11,9 @@ const int MAP_WIDTH = 13;
 const int TILE_SIZE = 40;
 const int INFO_PANEL_WIDTH = 250;
 const int TOTAL_SCREEN_WIDTH = SCREEN_WIDTH + INFO_PANEL_WIDTH;
+static int CHECKPOINT = 3;
+static int  BULLETE = 2 ;
+
+
 #endif // !CONSTANTS_H
 

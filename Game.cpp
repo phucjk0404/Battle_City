@@ -9,6 +9,8 @@
 #include <ctime>
 #include <string>
 #include <SDL_mixer.h>
+#include <fstream>
+#include "Constants.h"
 
 
 Game::Game() : gameState(MENU) {}
@@ -40,17 +42,21 @@ void handleEvents(SDL_Event& e, bool& running, Tank& tank, SDL_Renderer* rendere
                 tank.dirX = 0; tank.dirY = 1;
                 break;
             case SDLK_SPACE:
+                
                 tank.bullets.push_back(Bullet(
                     tank.x + TANK_SIZE / 2 - BULLET_SIZE / 2,
                     tank.y + TANK_SIZE / 2 - BULLET_SIZE / 2,
                     tank.dirX, tank.dirY, renderer
                 ));
+                
                 break;
             case SDLK_p:
                 if (game.getGamesatus() != PAUSE_GAME)
                 {
                     game.setGameSate(PAUSE_GAME);
                 }
+            case SDLK_m:
+				Mix_VolumeMusic(0);
                 
             }
 
@@ -115,6 +121,8 @@ void update(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>&
         return false;
         }), tank.bullets.end());
 
+    
+
     // Kiểm tra va chạm với đạn địch
 
     Uint32 currentTime = SDL_GetTicks();
@@ -135,7 +143,7 @@ void update(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>&
                 // Xóa viên đạn sau khi trúng
                 it = enemy.getBullets().erase(it);
 
-                std::cout << "Mạng còn lại: " << tank.lives << std::endl;
+                
 
                 if (tank.lives == 0) {
                     Mix_PlayChannel(-1, explosionSound, 0);
@@ -189,6 +197,7 @@ void update(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>&
         std::pair<int, int> randomElement = indexOfZero[randomIndex];
         enemies.push_back(EnemyTank(randomElement.first * 40, randomElement.second * 40, renderer));
     }
+
     // Cập nhật vị trí xe tăng địch
     for (auto& enemy : enemies) {
         if (!checkCollsionTank(enemy.getX(), enemy.getY(), &enemy, enemies)) {
@@ -206,7 +215,7 @@ void update(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>&
             }
         }
 
-        if (rand() % 100 < 5) { // 3% cơ hội bắn đạn mỗi frame
+        if (rand() % 100 < BULLETE) { // 3% cơ hội bắn đạn mỗi frame
             enemy.shoot();
         }
     }
@@ -255,6 +264,21 @@ void update(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosion>&
         }
         else {
             ++it;
+        }
+    }
+    if (score == CHECKPOINT)
+    {
+        CHECKPOINT += 3;
+        for (auto& enemy : enemies) {
+
+            if (enemy.getSpeed() < 7) {
+                enemy.setSpeed(enemy.getSpeed() + 1);
+
+            }
+        }
+        if (BULLETE < 7) // Giới hạn số lượng đạn tối đa của xe tăng địch
+        {
+            BULLETE++;
         }
     }
     if (enemies.size() == 0)
@@ -423,9 +447,15 @@ void resetGame(Tank& tank, std::vector<EnemyTank>& enemies, std::vector<Explosio
    // Xóa toàn bộ vụ nổ
     tank.x = 6 * 40; // Reset xe tăng của người chơi (tạo hàm reset() nếu cần)
     tank.y = 10 * 40;
+    tank.lives = 5;
     tank.dirX = 0;
     tank.dirY = -1;
     tank.isHidden = false;
+	BULLETE = 3; // Reset số lượng đạn của xe tăng địch
+    CHECKPOINT = 3;
+	for (auto enemy : enemies) {
+		enemy.setIsHidden(false); // Đặt lại trạng thái ẩn cho tất cả xe tăng địch
+	}
     score = 0; // Reset điểm số
 }
 

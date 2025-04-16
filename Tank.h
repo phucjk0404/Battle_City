@@ -15,7 +15,7 @@ public:
     std::vector<Bullet> bullets;
     bool isHidden = false;
     SDL_Texture* texture = nullptr;
-    int lives = 5;
+    int lives = 3;
     Uint32 invincibleTime = 0;
     bool isBlinking = false;     // Biến kiểm tra xe đang nhấp nháy
 

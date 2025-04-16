@@ -60,6 +60,7 @@ int main(int argc, char* argv[]) {
     }
     // Phát nhạc
     Mix_PlayMusic(backgroundMusic, -1);
+    Mix_VolumeMusic(64);
     int hightScore = 0;
 
     bool running = true;
@@ -142,6 +143,7 @@ int main(int argc, char* argv[]) {
         else {
 
             if (game.getGamesatus() == PLAYING) {
+				std::cout << tank.x << " " << tank.y << std::endl;
                 handleEvents(e, running, tank, renderer, enemies, game);
                 update(tank, enemies, explosions, explosionTexture1, explosionTexture2, explosionTexture3, game, indexOfZero, renderer, score,gamelevel,explosionSound,goverSound);
             }

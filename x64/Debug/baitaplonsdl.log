@@ -1,12 +1,2 @@
-﻿  Bullet.cpp
-C:\Users\Admin\OneDrive\cpp\baitaplonsdl\baitaplonsdl\Bullet.cpp(13,17): warning C4566: character represented by universal-character-name '\u1EC3' cannot be represented in the current code page (1252)
-C:\Users\Admin\OneDrive\cpp\baitaplonsdl\baitaplonsdl\Bullet.cpp(13,17): warning C4566: character represented by universal-character-name '\u0111' cannot be represented in the current code page (1252)
-C:\Users\Admin\OneDrive\cpp\baitaplonsdl\baitaplonsdl\Bullet.cpp(13,17): warning C4566: character represented by universal-character-name '\u1EA1' cannot be represented in the current code page (1252)
-  Collision.cpp
-  EnemyTank.cpp
-  Game.cpp
-C:\Users\Admin\OneDrive\cpp\baitaplonsdl\baitaplonsdl\Game.cpp(138,30): warning C4566: character represented by universal-character-name '\u1EA1' cannot be represented in the current code page (1252)
-  Map.cpp
-  main.cpp
-  Generating Code...
+﻿  main.cpp
   baitaplonsdl.vcxproj -> C:\Users\Admin\OneDrive\cpp\baitaplonsdl\x64\Debug\baitaplonsdl.exe
